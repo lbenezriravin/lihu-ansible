@@ -1,0 +1,13 @@
+# Install miscellaneous packages that do no directly interact with
+# any other larger system.
+---
+- name: Install miscellaneous packages
+  hosts: localhost
+  tasks:
+    - name: Install packages with DNF
+      when: ansible_distribution == "Fedora"
+      become: true
+      ansible.builtin.dnf:
+        name:
+          - vim
+        state: latest

@@ -1,0 +1,13 @@
+# Hack the python3-dnf package installation so future plays can
+# use the dnf module properly
+---
+- name: Bootstrap DNF python bindings
+  hosts: localhost
+  tasks:
+    - name: Bootstrap DNF python bindings
+      become: true
+      ansible.builtin.command: dnf install python3-dnf -y
+      args:
+        warn: false
+      register: result
+      changed_when: "'Nothing to do.' not in result.stdout_lines"

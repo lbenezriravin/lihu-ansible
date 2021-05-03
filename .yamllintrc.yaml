@@ -1,0 +1,6 @@
+---
+yaml-files:
+  - "*.yml"
+
+rules:
+  line-length: disable
