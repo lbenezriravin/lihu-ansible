@@ -24,8 +24,10 @@ poetry run ansible-playbook playbooks/<playbook_name> -K
 ```
 
 The `-K` flag will prompt you for the password for local privilege escalation, which is
-necessary for many tasks. The playbook that includes every playbook in order is called
-`everything.yml`.
+necessary for many tasks. If a task is hanging, there's a good chances you typed the
+password incorrectly and Ansible is hanging at a sudo prompt.
 
-If a task is hanging, there's a good chances you typed the password incorrectly and
-Ansible is hanging at a sudo prompt.
+Some playbooks take arguments. Specify parameters with `-e key=val`. These parameters
+are documented at the top of each play.
+
+The playbook that includes every playbook in order is called `everything.yml`.
