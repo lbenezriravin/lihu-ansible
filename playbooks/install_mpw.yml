@@ -33,7 +33,7 @@
         - name: Create temporary directory for source code
           ansible.builtin.tempfile:
             state: directory
-            suffix: mpw-build
+            suffix: .mpw-build
           register: mpw_tempfile
 
         - name: Download source tarball
