@@ -1,7 +1,7 @@
 # Install masterpassword, a stateless password manager
 # https://www.masterpasswordapp.com/
 #
-# Role parameters:
+# Play parameters:
 #   mpw_version (default: 2.7): Version of mpw to install
 #   mpw_install_path (default: ~/.local/bin): Location to install MPW binary
 ---

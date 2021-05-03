@@ -5,3 +5,4 @@
 - import_playbook: install_mpw.yml
 - import_playbook: install_dotfiles.yml
 - import_playbook: install_slack.yml
+- import_playbook: configure_environment.yml

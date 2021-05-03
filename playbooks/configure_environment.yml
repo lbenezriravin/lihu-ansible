@@ -1,0 +1,13 @@
+# Set various environmental parameters
+#
+# Play parameters:
+#   env_hostname: Desired system hostname. Does not get set if not specified.
+---
+- name: Configure system environment
+  hosts: localhost
+  tasks:
+    - name: Set system hostname
+      when: env_hostname is defined
+      become: true
+      hostname:
+        name: "{{ env_hostname }}"
