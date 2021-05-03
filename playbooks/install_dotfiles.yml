@@ -1,0 +1,30 @@
+# Install my dotfiles from source control using RCM
+# This playbook is dangerous! It will overwrite any existing dotfiles
+# you may have that conflict with those in lihu-dotfiles. Proceed at
+# your own risk!
+---
+- name: Install Lihu's dotfiles
+  hosts: localhost
+  tasks:
+    - name: Install RCM
+      become: true
+      ansible.builtin.dnf:
+        name:
+          - rcm
+        state: latest
+
+    - name: Download lihu-dotfiles
+      ansible.builtin.git:
+        repo: https://scm.yoloswag.lol/lihu/lihu-dotfiles.git
+        dest: "{{ ansible_env.HOME }}/.dotfiles"
+
+    - name: Install Vundle
+      ansible.builtin.git:
+        repo: https://github.com/VundleVim/Vundle.vim.git
+        dest: "{{ ansible_env.HOME }}/.vim/bundle/Vundle.vim"
+
+    - name: Install dotfiles
+      # rcm doesn't have a `-y` flag
+      ansible.builtin.shell: yes | rcup -v
+      register: result
+      changed_when: "'->' in result.stdout"
