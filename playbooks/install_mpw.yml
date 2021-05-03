@@ -1,0 +1,68 @@
+# Install masterpassword, a stateless password manager
+# https://www.masterpasswordapp.com/
+#
+# Role parameters:
+#   mpw_version (default: 2.7): Version of mpw to install
+#   mpw_install_path (default: ~/.local/bin): Location to install MPW binary
+---
+- name: Install masterpassword
+  hosts: localhost
+  vars:
+    mpw_version: "2.7"
+    mpw_install_path: "{{ ansible_env.HOME }}/.local/bin"
+  tasks:
+    - name: Check if MPW exists in path
+      # There is no --version or -V flag I can see on mpw
+      ansible.builtin.stat:
+        path: "{{ mpw_install_path }}/mpw"
+      register: mpw_stat
+
+    - name: Build and install MPW
+      when: mpw_stat.stat.exists is false
+      block:
+        - name: Install system dependencies with DNF
+          when: ansible_distribution == "Fedora"
+          become: true
+          ansible.builtin.dnf:
+            name:
+              - json-c-devel
+              - libsodium-devel
+              - ncurses-devel
+            state: latest
+
+        - name: Create temporary directory for source code
+          ansible.builtin.tempfile:
+            state: directory
+            suffix: mpw-build
+          register: mpw_tempfile
+
+        - name: Download source tarball
+          ansible.builtin.get_url:
+            url: "https://github.com/Lyndir/MasterPassword/archive/refs/tags/{{ mpw_version }}-cli-1.tar.gz"
+            dest: "{{ mpw_tempfile.path }}/MasterPassword-{{ mpw_version }}-cli-1.tar.gz"
+
+        - name: Extract tarball
+          ansible.builtin.unarchive:
+            dest: "{{ mpw_tempfile.path }}"
+            src: "{{ mpw_tempfile.path }}/MasterPassword-{{ mpw_version }}-cli-1.tar.gz"
+
+        - name: Build MPW
+          ansible.builtin.command: ./build
+          args:
+            chdir: "{{ mpw_tempfile.path }}/MasterPassword-{{ mpw_version }}-cli-1/platform-independent/c/cli/"
+          changed_when: true
+
+        - name: Install MPW
+          ansible.builtin.copy:
+            src: "{{ mpw_tempfile.path }}/MasterPassword-{{ mpw_version }}-cli-1/platform-independent/c/cli/{{ item }}"
+            dest: "{{ ansible_env.HOME }}/.local/bin/"
+            mode: 0755
+          loop:
+            - bashlib
+            - mpw
+
+        - name: Clean up source code
+          ansible.builtin.file:
+            path: "{{ mpw_tempfile.path }}"
+            state: absent
+          when: mpw_tempfile.path is defined
