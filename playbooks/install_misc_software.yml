@@ -11,5 +11,15 @@
         name:
           - bat
           - exa
+          - kitty
+          - light
+          - NetworkManager-tui
+          - pavucontrol
+          - playerctl
+          - ripgrep
+          - sway
+          - swaylock
           - vim
+          - waybar
+          - wl-clipboard
         state: latest
