@@ -13,6 +13,20 @@
           - rcm
         state: latest
 
+    - name: Install software referenced by dotfiles
+      become: true
+      ansible.builtin.dnf:
+        name:
+          - bat
+          - exa
+          - fira-code-fonts
+          - kitty
+          - light
+          - sway
+          - swaylock
+          - waybar
+        state: latest
+
     - name: Download lihu-dotfiles
       ansible.builtin.git:
         repo: https://scm.yoloswag.lol/lihu/lihu-dotfiles.git
