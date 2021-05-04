@@ -12,7 +12,9 @@
           - NetworkManager-tui
           - pavucontrol
           - playerctl
+          - python3-devel
           - ripgrep
+          - systemd-devel
           - vim
           - wl-clipboard
         state: latest
