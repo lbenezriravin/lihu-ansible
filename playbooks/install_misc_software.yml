@@ -9,6 +9,7 @@
       become: true
       ansible.builtin.dnf:
         name:
+          - chromium
           - NetworkManager-tui
           - pavucontrol
           - playerctl
