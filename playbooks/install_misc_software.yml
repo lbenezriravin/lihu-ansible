@@ -10,6 +10,7 @@
       ansible.builtin.dnf:
         name:
           - chromium
+          - fd-find
           - NetworkManager-tui
           - pavucontrol
           - playerctl
