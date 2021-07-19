@@ -16,6 +16,7 @@
           - playerctl
           - python3-devel
           - ripgrep
+          - ShellCheck
           - systemd-devel
           - vim
           - wl-clipboard
