@@ -30,6 +30,16 @@
               - ncurses-devel
             state: latest
 
+        - name: Install system dependencies with APT
+          when: ansible_distribution == "Pop!_OS"
+          become: true
+          ansible.builtin.apt:
+            name:
+              - libjson-c-dev
+              - libsodium-dev
+              - ncurses-dev
+            state: latest
+
         - name: Create temporary directory for source code
           ansible.builtin.tempfile:
             state: directory

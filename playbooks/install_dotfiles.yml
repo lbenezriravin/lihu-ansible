@@ -6,15 +6,25 @@
 - name: Install Lihu's dotfiles
   hosts: localhost
   tasks:
-    - name: Install RCM
+    - name: Install RCM via DNF
       become: true
+      when: ansible_distribution == "Fedora"
       ansible.builtin.dnf:
+        name:
+          - rcm
+        state: latest
+
+    - name: Install RCM via APT
+      become: true
+      when: ansible_distribution == "Pop!_OS"
+      ansible.builtin.apt:
         name:
           - rcm
         state: latest
 
     - name: Install software referenced by dotfiles
       become: true
+      when: ansible_distribution == "Fedora"
       ansible.builtin.dnf:
         name:
           - bat
@@ -26,6 +36,25 @@
           - swaylock
           - waybar
         state: latest
+
+    - name: Install software referenced by dotfiles
+      become: true
+      when: ansible_distribution == "Pop!_OS"
+      ansible.builtin.apt:
+        name:
+          - bat
+          - exa
+          - fonts-firacode
+          - kitty
+          - light
+          - sway
+          - swaylock
+          - waybar
+        state: latest
+
+    - name: Install treesitter cli
+      command:
+        cargo install tree-sitter-cli
 
     - name: Download lihu-dotfiles
       ansible.builtin.git:

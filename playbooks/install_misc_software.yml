@@ -1,23 +1,48 @@
 # Install miscellaneous packages that do no directly interact with
 # any other larger system.
 ---
-- name: Install miscellaneous packages
+- name: Install miscellaneous packages on Fedora
   hosts: localhost
   tasks:
+  - when: ansible_distribution == "Fedora"
+    block:
     - name: Install packages with DNF
-      when: ansible_distribution == "Fedora"
       become: true
       ansible.builtin.dnf:
         name:
-          - chromium
-          - fd-find
-          - NetworkManager-tui
-          - pavucontrol
-          - playerctl
-          - python3-devel
-          - ripgrep
-          - ShellCheck
-          - systemd-devel
-          - vim
-          - wl-clipboard
+        - chromium
+        - fd-find
+        - NetworkManager-tui
+        - pavucontrol
+        - playerctl
+        - python3-devel
+        - ripgrep
+        - ShellCheck
+        - systemd-devel
+        - vim
+        - wl-clipboard
+        - htop
         state: latest
+
+- name: Install miscellaneous packages on Pop! OS
+  hosts: localhost
+  tasks:
+  - when: ansible_distribution == "Pop!_OS"
+    block:
+    - name: Install packages with APT
+      become: true
+      ansible.builtin.apt:
+        name:
+        - python3-venv
+        - vim
+        - cargo
+        - wl-clipboard
+        - htop
+    - name: Install packages with Snap
+      become: true
+      community.general.snap:
+        name:
+        - slack
+        - chromium
+    - name: Install exa with cargo
+      command: cargo install exa

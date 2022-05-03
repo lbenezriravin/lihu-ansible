@@ -1,6 +1,6 @@
 # Run every playbook, in order if there are dependencies
 ---
-- import_playbook: bootstrap_dnf_bindings.yml
+- import_playbook: bootstrap_package_manager_bindings.yml
 - import_playbook: install_misc_software.yml
 - import_playbook: install_mpw.yml
 - import_playbook: install_dotfiles.yml

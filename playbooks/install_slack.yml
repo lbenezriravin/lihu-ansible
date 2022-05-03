@@ -1,8 +1,10 @@
-# Install slack electron app
+# Install slack electron app for Fedora.
 ---
 - name: Install slack
   hosts: localhost
   tasks:
+  - when: ansible_distribution == "Fedora"
+    block:
     - name: Check if slack is installed
       ansible.builtin.stat: 
         path: /usr/bin/slack
@@ -11,27 +13,26 @@
     - name: Download and install Slack
       when: slack_stat.stat.exists is false
       block:
-        - name: Create temporary directory
-          ansible.builtin.tempfile:
-            state: directory
-            suffix: .slack-install
-          register: slack_tempfile
+      - name: Create temporary directory
+        ansible.builtin.tempfile:
+          state: directory
+          suffix: .slack-install
+        register: slack_tempfile
 
-        - name: Download slack RPM
-          ansible.builtin.get_url:
-            url: https://downloads.slack-edge.com/linux_releases/slack-4.15.0-0.1.fc21.x86_64.rpm
-            dest: "{{ slack_tempfile.path }}/slack-4.15.0-0.1.fc21.x86_64.rpm"
+      - name: Download slack RPM
+        ansible.builtin.get_url:
+          url: https://downloads.slack-edge.com/linux_releases/slack-4.15.0-0.1.fc21.x86_64.rpm
+          dest: "{{ slack_tempfile.path }}/slack-4.15.0-0.1.fc21.x86_64.rpm"
 
-        - name: Install slack with DNF
-          when: ansible_distribution == "Fedora"
-          become: true
-          ansible.builtin.dnf:
-            name: "{{ slack_tempfile.path }}/slack-4.15.0-0.1.fc21.x86_64.rpm"
-            state: present
-            disable_gpg_check: true
+      - name: Install slack with DNF
+        become: true
+        ansible.builtin.dnf:
+          name: "{{ slack_tempfile.path }}/slack-4.15.0-0.1.fc21.x86_64.rpm"
+          state: present
+          disable_gpg_check: true
 
-        - name: Clean up downloaded RPM
-          ansible.builtin.file:
-            path: "{{ slack_tempfile.path }}"
-            state: absent
-          when: slack_tempfile.path is defined
+      - name: Clean up downloaded RPM
+        ansible.builtin.file:
+          path: "{{ slack_tempfile.path }}"
+          state: absent
+        when: slack_tempfile.path is defined
